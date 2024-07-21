@@ -13,5 +13,15 @@ export const UserSchema = new EntitySchema<User>({
     name: {
       type: String,
     },
+    email: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    profileUrl: {
+      nullable: true,
+      type: String,
+    },
   },
 });

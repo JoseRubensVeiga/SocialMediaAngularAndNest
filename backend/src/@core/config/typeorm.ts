@@ -12,8 +12,9 @@ const config = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
-  migrations: ['./src/@core/database/migrations/*.ts'],
+  autoLoadEntities: true,
+  entities: [__dirname + './**/*.schema.{js,ts}'],
+  migrations: [__dirname + './src/@core/database/migrations/*.ts'],
   extra: {
     encrypt: process.env.DATABASE_ENCRYPT === 'true',
     enableArithAbort: process.env.DATABASE_ENABLE_ARITH_ABORT === 'true',
