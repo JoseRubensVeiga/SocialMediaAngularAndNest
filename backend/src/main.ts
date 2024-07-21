@@ -1,19 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { configureOpenApi } from './@core/config/open-api';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('Social Media')
-    .setDescription("Social Media API's")
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  configureOpenApi(app);
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
 }
