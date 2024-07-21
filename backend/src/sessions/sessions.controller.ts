@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionsService } from './sessions.service';
-import { CreateSessionDTO } from 'src/@core/domain/sessions/requests/CreateSessionDTO';
+import { CreateSessionDTO } from '../@core/domain/dtos/sessions/requests/CreateSessionDTO';
 
 @ApiTags('Sessions')
 @Controller('sessions')
@@ -10,6 +10,6 @@ export class SessionsController {
 
   @Post()
   create(@Body() createSessionDTO: CreateSessionDTO): any {
-    return createSessionDTO;
+    return this.sessionsService.create(createSessionDTO);
   }
 }

@@ -3,25 +3,22 @@ import { AppService } from './app.service';
 import { SessionsModule } from './sessions/sessions.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configDotenv } from 'dotenv';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import typeorm from './@core/config/typeorm';
 
 configDotenv();
 
 @Module({
   imports: [
     SessionsModule,
-    TypeOrmModule.forRoot({
-      type: process.env.DATABASE_TYPE,
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
-      entities: [],
-      extra: {
-        encrypt: process.env.DATABASE_ENCRYPT === 'true',
-        enableArithAbort: process.env.DATABASE_ENABLE_ARITH_ABORT === 'true',
-      },
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [typeorm],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
   ],
   controllers: [],
