@@ -18,6 +18,7 @@ export class AddUsersTable1721574222733 implements MigrationInterface {
           {
             name: 'profileUrl',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -35,6 +36,6 @@ export class AddUsersTable1721574222733 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('users');
+    await queryRunner.dropTable('users');
   }
 }

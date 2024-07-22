@@ -1,19 +1,27 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  name: 'users',
+})
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: String })
   name: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: String,
+  })
   profileUrl: string;
 
-  @Column()
+  @Column({
+    unique: true,
+    type: String,
+  })
   email: string;
 
-  @Column()
+  @Column({ type: String })
   password: string;
 }

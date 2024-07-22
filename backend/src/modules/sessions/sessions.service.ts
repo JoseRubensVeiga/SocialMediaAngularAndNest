@@ -3,12 +3,14 @@ import { sign } from 'jsonwebtoken';
 import { addDays } from 'date-fns';
 import { UsersRepository } from '@repositories/users.repository';
 import { CreateSessionDTO } from '@domain/dtos/sessions/requests/CreateSessionDTO';
+import * as bcrypt from 'bcrypt';
+import { JwtResponse } from '@domain/dtos/sessions/responses/JwtResponse';
 
 @Injectable()
 export class SessionsService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async create(createSessionDTO: CreateSessionDTO): Promise<any> {
+  async create(createSessionDTO: CreateSessionDTO): Promise<JwtResponse> {
     const secret = process.env.JWT_SECRET;
 
     const user = await this.usersRepository.findOneBy({
@@ -20,7 +22,11 @@ export class SessionsService {
     }
 
     // TODO - ENCRYPT PASSWORD
-    const isPasswordCorrect = user.password === createSessionDTO.password;
+
+    const isPasswordCorrect = await bcrypt.compare(
+      createSessionDTO.password,
+      user.password,
+    );
 
     if (!isPasswordCorrect) {
       throw new BadRequestException('Invalid credentials.');
@@ -30,7 +36,7 @@ export class SessionsService {
 
     return {
       accessToken,
-      expiresIn: +addDays(new Date(), 1),
+      expiresIn: addDays(new Date(), 1).toISOString(),
     };
   }
 }
